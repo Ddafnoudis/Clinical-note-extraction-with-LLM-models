@@ -1,38 +1,44 @@
 """
-Testing Llama3 model for extraction of relevant words on
-clinical notes.
-
-Purpose: To check if the model can understand both languages and give same examples. 
+Testing Llama3 model for extraction of relevant words
 """
-# Import libraries
-import os
+# Import libraries and modules
 import pandas as pd
+from pathlib import Path
+from scripts.parse_data import parse_data
+from scripts.llama_test import llama_test
 from scripts.llama_model import model, model_danish
-from scripts.gen_dataframe import gen_dataframe
+# from scripts.llama_train_in_danish import train_llama3
 
-# Define the keyword
-KEYWORD = input("Enter the word that you are interested in: ")
-BATCH_SIZE = 20
+# Define keyword and paths
+# KEYWORD = input("Enter the word that you are interested in: ")
+MY_TOKEN = "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" #input("Provide your token: ")
+LLM_MODEL = "LLama3_instruct/Meta-Llama-3-8B-Instruct"
+DATA_FOLDER = Path("~/Desktop/Clinical-note-extraction-with-LLM-models/dataset_notes").expanduser()
+DF_ENG = Path("~/Desktop/Clinical-note-extraction-with-LLM-models/dataset_notes/clin_note_df.tsv").expanduser()
+DF_DK = Path("~/Desktop/Clinical-note-extraction-with-LLM-models/dataset_notes/clin_note_danish_df.tsv").expanduser()
+
 
 def main():
-    # Condition statemet
-    if os.path.exists("dataset_notes/clin_note_df.tsv") and os.path.exists("dataset_notes/clin_note_danish_df.tsv"):
-        print("File exists")
-    else:
-        print("Generating a Dataframe with clinical notes")
-        # Generate the DataFrame 
-        gen_dataframe()
+    # Condition statement
+    parse_data(data_folder_path=DATA_FOLDER, df_eng_path=DF_ENG, df_dk_path=DF_DK)
+    # Parse dataset
+    df_eng = pd.read_csv(DF_ENG, sep="\t", dtype=object)
+    df_dk = pd.read_csv(DF_DK, sep="\t", dtype=object)
 
-    # Parse the datasets
-    dataframe = pd.read_csv("dataset_notes/clin_note_df.tsv", sep="\t", dtype=object)
-    dataframe_danish = pd.read_csv("dataset_notes/clin_note_danish_df.tsv", sep="\t", dtype=object)
 
-    # Response of the model (English)    
-    response = model(df=dataframe, keyword=KEYWORD, batch_size=BATCH_SIZE)
-    print(response, "\n\n")
-    # Respond of the model (Dansish)
-    # response_danish = model_danish(df_da=dataframe_danish, keyword=KEYWORD, batch_size=BATCH_SIZE)
+    # Train the model
+    llama_test(df_dk=df_dk, llm_model=LLM_MODEL)
+
+    # Train the Llama3 model 
+    # train_llama3(token_id=MY_TOKEN, llm_model=LLM_MODEL)
+
+    # # Response of the model (English)    
+    # response = model(df_eng=df_eng, keyword=KEYWORD)
+    # print(response, "\n\n")
+    # # Respond of the model (Dansish)
+    # response_danish = model_danish(df_dk=df_dk, keyword=KEYWORD)
     # print(response_danish)
+
 
 if __name__ == "__main__":
     main()
