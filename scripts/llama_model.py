@@ -30,7 +30,7 @@ def model(df_eng: DataFrame, keyword:str)-> List[str]:
     
     # Response based on model and message
     try:
-        response = ollama.chat(model='llama3', messages=message)
+        response = ollama.chat(model='llama3', messages=message, stream=True)
         return response['message']['content']
     # Capture an error  
     except Exception as error:
@@ -39,6 +39,7 @@ def model(df_eng: DataFrame, keyword:str)-> List[str]:
     
 
 def model_danish(df_dk: DataFrame, keyword: str)-> List[str]:
+    pass
     # Pull model
     try:
         ollama.pull("llama3")

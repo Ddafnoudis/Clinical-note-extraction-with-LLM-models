@@ -1,41 +1,48 @@
+"""
+Training an Large Language Model (LLM) in Danish clinical text data
+"""
+import os
 import torch
+from transformers import LlamaForCausalLM, AutoTokenizer, TrainingArguments
 from tqdm import tqdm
+from typing import Dict
 from pandas import DataFrame
 from sklearn.model_selection import train_test_split
-from transformers import AutoTokenizer, AutoModelForCausalLM
+from torch.utils.data import DataLoader, Dataset
 
+os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
 
-def llama_test(df_dk: DataFrame, llm_model: str):
-
+def llama_test(df_dk: DataFrame, llm_model: str, batch_size: int, num_epochs: int):
+    """
+    Train the Llama3 model in danish clinical text data
+    """
     # Preprocess the text data
-    tokenizer = AutoTokenizer.from_pretrained(
-        llm_model,
-        padding=True,
-        padding_side="left",
-        pad_token="[PAD]",
-        add_eos_token=True,
-        add_bos_token=True,
-        )
-
+    tokenizer = AutoTokenizer.from_pretrained(llm_model, padding=True,
+                                              padding_side="right", pad_token="[PAD]",
+                                              add_eos_token=True, add_bos_token=True)
     tokenizer.pad_token = tokenizer.eos_token
 
-    def preprocess_text(text):
-        return tokenizer.encode_plus(
-            text,
-            max_length=512,
-            padding="max_length",
-            truncation=True,
-            return_attention_mask=True,
-            return_tensors="pt"
-        )
+    # Input_ids and attention_mask
+    def preprocess_text(text: str) -> Dict[torch.Tensor, torch.Tensor]:
+        """
+        Tokenize the words of the sentence and encode them
+        """
+        encoded_text = tokenizer.encode_plus(text, max_length=512,
+                                             padding="max_length", truncation=True,
+                                             return_attention_mask=True, return_tensors="pt")
+        return {
+            "input_ids": encoded_text["input_ids"].squeeze(),
+            "attention_mask": encoded_text["attention_mask"].squeeze()
+        }
 
-    df_dk["clinical_notes"] = df_dk["clinical_notes"].apply(preprocess_text)
-    # print(df_dk["clinical_notes"]);exit()
+    # Define the preprocessed clinical notes
+    clinical_notes_tokenized = df_dk["clinical_notes"].apply(preprocess_text)
+
     # Split the data into training and test sets
-    train_texts, val_texts = train_test_split(df_dk["clinical_notes"], test_size=0.2, random_state=42)
+    train_texts, val_texts = train_test_split(clinical_notes_tokenized, test_size=0.2, random_state=42)
 
     # Create a dataset class for our data
-    class ClinicalNotesDataset(torch.utils.data.Dataset):
+    class ClinicalNotesDataset(Dataset):
         def __init__(self, texts):
             self.texts = texts
 
@@ -44,63 +51,58 @@ def llama_test(df_dk: DataFrame, llm_model: str):
 
         def __getitem__(self, idx):
             text = self.texts.iloc[idx]
-            # input_ids = text["input_ids"].squeeze()
-            # attention_mask = text["attention_mask"].squeeze()
             return {
                 "input_ids": text['input_ids'].squeeze(),
-                "attention_mask": text['attention_mask'].squeeze()
-                }
+                "attention_mask": text['attention_mask'].squeeze(),
+                "labels": text['input_ids'].squeeze()  # Use input_ids as labels for causal language modeling
+            }
 
     # Create data loaders for training and validation
     train_dataset = ClinicalNotesDataset(train_texts)
-    # print(train_dataset);exit()
     val_dataset = ClinicalNotesDataset(val_texts)
 
-    train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=16, shuffle=True)
-    # print(train_loader);exit()
-    val_loader = torch.utils.data.DataLoader(val_dataset, batch_size=16, shuffle=False)
+    train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
+    val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False)
 
     # Load the LLaMA model
-    model = AutoModelForCausalLM.from_pretrained(
-        llm_model,
-        torch_dtype=torch.bfloat16,
-        device_map="auto"
-    )
+    model = LlamaForCausalLM.from_pretrained(llm_model)
 
-    # Train the model
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    # Ensure the model is on CPU
+    device = torch.device("cpu")
     model.to(device)
 
-    criterion = torch.nn.CrossEntropyLoss()
-    optimizer = torch.optim.Adam(model.parameters(), lr=1e-5)
+    # Define training arguments
+    training_args = TrainingArguments(
+        output_dir="./results",
+        num_train_epochs=num_epochs,
+        per_device_train_batch_size=batch_size,
+        learning_rate=1e-5,
+        weight_decay=0.01,
+        logging_dir="./logs",
+        logging_steps=100,
+        save_steps=10000,
+        save_total_limit=2,
+    )
 
-    for epoch in range(5):
-        model.train()
+    # Initialize optimizer
+    optimizer = torch.optim.Adam(model.parameters(), lr=training_args.learning_rate)
+
+    # Training loop
+    model.train()
+    for epoch in range(num_epochs):
         total_loss = 0
         for batch in tqdm(train_loader, desc=f"Epoch {epoch+1} Training", leave=False):
             input_ids = batch["input_ids"].to(device)
             attention_mask = batch["attention_mask"].to(device)
-            labels = input_ids.clone()
+            labels = batch["labels"].to(device)
             optimizer.zero_grad()
             outputs = model(input_ids, attention_mask=attention_mask, labels=labels)
-            loss = criterion(outputs, labels)
+            loss = outputs.loss
             loss.backward()
             optimizer.step()
             total_loss += loss.item()
         print(f"Epoch {epoch+1}, Loss: {total_loss / len(train_loader)}")
 
-        model.eval()
-        total_loss = 0
-        with torch.no_grad():
-            for batch in tqdm(val_loader, desc=f"Epoch {epoch+1} Validation", leave=False):
-                input_ids = batch["input_ids"].to(device)
-                attention_mask = batch["attention_mask"].to(device)
-                labels = input_ids.clone()
-                outputs = model(input_ids, attention_mask=attention_mask, labels=labels)
-                loss = criterion(outputs, labels)
-                total_loss += loss.item()
-        print(f"Epoch {epoch+1}, Val Loss: {total_loss / len(val_loader)}")
-
-
+    
 if __name__ == "__main__":
     llama_test()
