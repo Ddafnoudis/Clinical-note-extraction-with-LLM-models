@@ -114,18 +114,52 @@ def gen_dataframe():
     "Patienten er en 60-årig kvinde med Parkinsons sygdom, der præsenterer med balanceproblemer, muskelstivhed og talevanskeligheder. Hun får ordineret Ropinirol, Levodopa og Amantadin.",
     "En 50-årig mand med CKD rapporterer nedsat appetit, kvalme og kramper i benene. Hans behandling inkluderer Losartan, Furosemid og Erythropoietin.",
     "Patienten er en 33-årig kvinde med ulcerøs colitis, der oplever tenesmus, vægttab og anæmi. Hun behandles med Balsalazid, Prednison og Azathioprin.",
-    "En 47-årig mand med fibromyalgi præsenterer med kognitive vanskeligheder, udbredte smerter og irritabel tarmsymptomer. Hans medicin inkluderer Gabapentin, Duloxetin og Tramadol."
+    "En 47-årig mand med fibromyalgi præsenterer med kognitive vanskeligheder, udbredte smerter og irritabel tarmsymptomer. Hans medicin inkluderer Gabapentin, Duloxetin og Tramadol.",
+    "Patienten er en 55-årig kvinde med hypothyroidisme, der oplever vægtøgning, træthed og tør hud. Hendes behandling inkluderer Levothyroxin, Vitamin D og Selenium.",
+    "En 60-årig mand med Parkinsons sygdom rapporterer balanceproblemer, muskelstivhed og rystelser. Han behandles med Levodopa, Carbidopa og Pramipexol.",
+    "Patienten er en 43-årig kvinde med multipel sklerose, der oplever dobbeltsyn, muskelsvaghed og træthed. Hendes medicin inkluderer Glatirameracetat, Baclofen og Modafinil.",
+    "En 51-årig mand diagnosticeret med hypertension præsenterer med hjertebanken, hovedpine og brystsmerter. Han behandles med Losartan, Amlodipin og Hydrochlorothiazid.",
+    "Patienten er en 39-årig kvinde med cøliaki, der oplever oppustethed, diarré og vægttab. Hun følger en streng glutenfri diæt og tager Loperamid og Vitamin B12 kosttilskud.",
+    "En 65-årig mand med type 2 diabetes rapporterer neuropati, sløret syn og langsomt helende sår. Han behandles med Metformin, Insulin og Pioglitazon.",
+    "Patienten er en 28-årig kvinde med astma, der oplever natlig hoste, åndenød og hvæsende vejrtrækning. Hun får ordineret Salmeterol, Budesonid og Montelukast.",
+    "En 52-årig kvinde præsenterer med leddegigt og rapporterer ledsmerter, hævelse og morgenstivhed. Hendes behandling inkluderer Methotrexat, Hydroxychloroquin og Ibuprofen.",
+    "Patienten er en 73-årig mand med KOL, der lider af kronisk hoste, dyspnø og hyppige luftvejsinfektioner. Hans medicin inkluderer Tiotropium, Salbutamol og Prednisolon.",
+    "En 37-årig kvinde med systemisk lupus erythematosus præsenterer med udslæt i ansigtet, ledsmerter og træthed. Hun tager i øjeblikket Hydroxychloroquin, Prednison og Mycophenolatmofetil.",
+    "Patienten er en 49-årig mand med GERD, der oplever halsbrand, opstød og brystsmerter. Han behandles med Omeprazol, Ranitidin og Metoclopramid.",
+    "En 33-årig kvinde diagnosticeret med irritabel tarmsyndrom (IBS) rapporterer mavesmerter, oppustethed og vekslende diarré og forstoppelse. Hendes medicin inkluderer Dicyclomin, Loperamid og Amitriptylin.",
+    "Patienten er en 64-årig mand med Parkinsons sygdom, der præsenterer med rystelser, stivhed og bradykinesi. Han får ordineret Levodopa, Carbidopa og Pramipexol.",
+    "En 55-årig kvinde med kronisk nyresygdom (CKD) rapporterer træthed, hævelse i benene og nedsat urinproduktion. Hendes behandling inkluderer Lisinopril, Furosemid og Erythropoietin.",
+    "Patienten er en 29-årig mand med ulcerøs colitis, der oplever mavesmerter, blodig diarré og vægttab. Han behandles med Mesalamin, Prednison og Azathioprin.",
+    "En 50-årig kvinde med fibromyalgi præsenterer med udbredte muskuloskeletale smerter, træthed og søvnforstyrrelser. Hendes medicin inkluderer Pregabalin, Duloxetin og Tramadol.",
+    "Patienten er en 47-årig mand diagnosticeret med type 2 diabetes, der lider af fedme, træthed og hævelse i benene. Hans nuværende medicinregime inkluderer Insulin, Sulfonylurinstoffer (SU) og Carvedilol.",
+    "En 31-årig kvinde med multipel sklerose (MS) rapporterer følelsesløshed, muskelsvaghed og synsforstyrrelser. Hun tager i øjeblikket Interferon beta, Glatirameracetat og Methylprednisolon.",
+    "Patienten er en 78-årig kvinde med osteoporose, der oplever rygsmerter, nedsat højde og en nylig hoftefraktur. Hendes behandling inkluderer Alendronat, Calcium og Vitamin D kosttilskud.",
+    "En 54-årig mand diagnosticeret med hepatitis C præsenterer med træthed, gulsot og mavesmerter. Han behandles med Sofosbuvir, Ribavirin og Peginterferon alfa.",
+    "Patienten er en 42-årig kvinde med migræne, der rapporterer svær hovedpine, kvalme og lysfølsomhed. Hun får ordineret Sumatriptan, Propranolol og Topiramat.",
+    "En 70-årig mand med benign prostatahyperplasi (BPH) oplever vandladningsbesvær, natlig vandladning og en svag urinstråle. Hans medicin inkluderer Tamsulosin, Finasterid og Dutasterid.",
+    "Patienten er en 29-årig kvinde med polycystisk ovariesyndrom (PCOS), der lider af uregelmæssige menstruationer, hirsutisme og akne. Hun tager i øjeblikket Metformin, Spironolakton og orale præventionsmidler.",
+    "En 59-årig mand diagnosticeret med kronisk hepatitis B præsenterer med træthed, mavesmerter og gulsot. Han behandles med Tenofovir, Entecavir og Lamivudin.",
+    "Patienten er en 48-årig kvinde med hypothyroidisme, der oplever vægtøgning, træthed og kuldeintolerance. Hendes behandling inkluderer Levothyroxin, Liothyronin og Selen kosttilskud.",
+    "En 34-årig mand med cøliaki rapporterer diarré, vægttab og oppustethed. Hans medicin inkluderer en glutenfri diæt, Loperamid og Vitamin D kosttilskud.",
+    "Patienten er en 56-årig kvinde med psoriasis, der præsenterer med røde, skællende pletter på huden, kløe og ledsmerter. Hun tager i øjeblikket Methotrexat, Adalimumab og Calcipotriol.",
+    "En 67-årig mand diagnosticeret med urinsyregigt oplever svære ledsmerter, hævelse og rødme, primært i storetåen. Han behandles med Allopurinol, Colchicin og Indometacin.",
+    "Patienten er en 32-årig kvinde med endometriose, der lider af bækkensmerter, dysmenoré og infertilitet. Hendes medicin inkluderer Danazol, Leuprolid og orale præventionsmidler.",
+    "En 53-årig mand med kronisk hepatitis C præsenterer med træthed, mavesmerter og gulsot. Han behandles med Sofosbuvir, Ledipasvir og Ribavirin.",
+    "Patienten er en 45-årig kvinde med Crohns sygdom, der oplever mavesmerter, diarré og vægttab. Hendes behandling inkluderer Infliximab, Azathioprin og Mesalamin.",
+    "En 74-årig mand diagnosticeret med prostatakræft rapporterer vandladningsbesvær, hæmaturi og bækkensmerter. Han tager i øjeblikket Leuprolid, Flutamid og Bikalutamid.",
+    "Patienten er en 38-årig kvinde med ankyloserende spondylitis, der lider af kroniske rygsmerter, stivhed og nedsat bevægelighed. Hendes medicin inkluderer Etanercept, Sulfasalazin og Naproxen.",
+    "En 51-årig mand med amyotrofisk lateral sklerose (ALS) præsenterer med muskelsvaghed, talebesvær og vejrtrækningsproblemer. Hans behandling inkluderer Riluzol, Baclofen og Edaravone."
     ]
 
 
     # Create a list of Patient IDs and codes
-    patient_ids = [f"PID{1000+i}" for i in range(len(clinical_notes))]
-    codes = [f"CODE{1000+i}" for i in range(len(clinical_notes))]
+    patient_ids_da = [f"PID{1000+i}" for i in range(len(clinical_notes_danish))]
+    codes_da = [f"CODE{1000+i}" for i in range(len(clinical_notes_danish))]
 
     # Create a dictionary
     data2 = {
-        "patient_id": patient_ids,
-        "code_id": codes,
+        "patient_id": patient_ids_da,
+        "code_id": codes_da,
         "clinical_notes": clinical_notes_danish
     }
     
