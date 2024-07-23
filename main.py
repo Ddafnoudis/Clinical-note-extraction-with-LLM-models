@@ -22,10 +22,12 @@ DATA_FOLDER = Path("~/Desktop/Clinical-note-extraction-with-LLM-models/dataset_n
 DF_ENG = Path("~/Desktop/Clinical-note-extraction-with-LLM-models/dataset_notes/clin_note_df.tsv").expanduser()
 DF_DK = Path("~/Desktop/Clinical-note-extraction-with-LLM-models/dataset_notes/clin_note_danish_df.tsv").expanduser()
 RESULTS = Path("~/Desktop/Clinical-note-extraction-with-LLM-models/results").expanduser()
+CHAT_OUTPUT = Path("~/Desktop/Clinical-note-extraction-with-LLM-models/results/response_list.txt").expanduser()
 
 # Set the batch size and number of epochs for training
 BATCH_SIZE = 5
 NUM_EPOCHS = 1
+
 
 def main():
     # Condition statement
@@ -53,7 +55,7 @@ def main():
     # response = model(df_eng=df_eng, keyword=KEYWORD)
     # print(response, "\n\n")
     # Respond of the model (Dansish)
-    response_danish = model_danish(df_dk=df_dk, keyword=KEYWORD, batch_size=BATCH_SIZE)
+    response_danish = model_danish(df_dk=df_dk, keyword=KEYWORD, batch_size=BATCH_SIZE, chat_output=CHAT_OUTPUT)
     print(response_danish)
 
 
