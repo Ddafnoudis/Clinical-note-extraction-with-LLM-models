@@ -71,6 +71,8 @@ def model_danish(df_dk: DataFrame, keyword: str, batch_size: int, chat_output: P
         # Create an exception if error occured during response
         except Exception as error:
             print(f"{error}")
+    
+    return response_content
 
 
 if __name__ == "__main__":
