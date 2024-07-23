@@ -1,3 +1,3 @@
-# Clinical-note-extraction-with-LLM-models
+# Integrating Large Language Models into Clinical Notes: Symptom Extraction project 
 
-Dummy clinical notes to test the ollama model, Llama3
+A project that see the performance of Llama3 model in the training into clinical notes and the extraction of symptoms based on condition.
