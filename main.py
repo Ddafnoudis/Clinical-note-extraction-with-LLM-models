@@ -6,11 +6,13 @@ import pandas as pd
 from pathlib import Path
 from scripts.parse_data import parse_data
 from scripts.llama_test import llama_test
-from scripts.llama_model import model, model_danish
+from scripts.masked_modelling import mask_words
+from scripts.llama_model import model_danish # models
 from scripts.llama_train_in_danish import train_llama3
+from sklearn.model_selection import train_test_split
 
 # Define keyword and paths
-# KEYWORD = input("Enter the word that you are interested in: ")
+KEYWORD = "diabetes" #input("Enter the word that you are interested in: ")
 LLM_MODEL = Path("~/Desktop/Clinical-note-extraction-with-LLM-models/AI-Sweden-Models/Llama-3-8B").expanduser()
 MODEL_PATH = f"{LLM_MODEL}/model-00004-of-00004.safetensors"
 TOKENIZER_PATH = Path("~/Desktop/Clinical-note-extraction-with-LLM-models/AI-Sweden-Models/Llama-3-8B/tokenizer.json").expanduser()
@@ -31,20 +33,26 @@ def main():
     df_eng = pd.read_csv(DF_ENG, sep="\t", dtype=object)
     df_dk = pd.read_csv(DF_DK, sep="\t", dtype=object)
 
-    
+    # Preproces and extract clinical notes
+    clinical_notes_list = df_dk["clinical_notes"].tolist()
+    train_text, test_text = train_test_split(clinical_notes_list, train_size=0.2, random_state=42) 
+
+    # results = mask_words(llm_model=LLM_MODEL, train_text=train_text, test_text=test_text)    
+    # print(results)
+
     # Train the model
-    llama_test(df_dk=df_dk, llm_model=LLM_MODEL, model_path=MODEL_PATH, tokenizer_path=TOKENIZER_PATH, batch_size=BATCH_SIZE, new_model=NEW_MODEL, num_epochs=NUM_EPOCHS)
+    # llama_test(df_dk=df_dk, llm_model=LLM_MODEL, batch_size=BATCH_SIZE, new_model=NEW_MODEL, num_epochs=NUM_EPOCHS)
 
     # Train the Llama3 model 
     # attempt_response = train_llama3(df_dk=df_dk)
     # print(attempt_response);exit()
 
-    # Response of the model (English)    
+    # # Response of the model (English)    
     # response = model(df_eng=df_eng, keyword=KEYWORD)
     # print(response, "\n\n")
-    # # Respond of the model (Dansish)
-    # response_danish = model_danish(df_dk=df_dk, keyword=KEYWORD)
-    # print(response_danish)
+    # Respond of the model (Dansish)
+    response_danish = model_danish(df_dk=df_dk, keyword=KEYWORD)
+    print(response_danish)
 
 
 if __name__ == "__main__":
