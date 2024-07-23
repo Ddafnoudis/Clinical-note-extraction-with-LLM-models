@@ -7,12 +7,12 @@ from pathlib import Path
 from scripts.parse_data import parse_data
 from scripts.llama_test import llama_test
 from scripts.masked_modelling import mask_words
-from scripts.llama_model import model_danish # models
+from scripts.llama_model import model_danish 
 from scripts.llama_train_in_danish import train_llama3
 from sklearn.model_selection import train_test_split
 
 # Define keyword and paths
-KEYWORD = "diabetes" #input("Enter the word that you are interested in: ")
+KEYWORD = input("Enter the word that you are interested in: ")
 LLM_MODEL = Path("~/Desktop/Clinical-note-extraction-with-LLM-models/AI-Sweden-Models/Llama-3-8B").expanduser()
 MODEL_PATH = f"{LLM_MODEL}/model-00004-of-00004.safetensors"
 TOKENIZER_PATH = Path("~/Desktop/Clinical-note-extraction-with-LLM-models/AI-Sweden-Models/Llama-3-8B/tokenizer.json").expanduser()
@@ -21,20 +21,22 @@ NEW_MODEL=  Path("~/Desktop/Clinical-note-extraction-with-LLM-models/AI-Sweden-M
 DATA_FOLDER = Path("~/Desktop/Clinical-note-extraction-with-LLM-models/dataset_notes").expanduser()
 DF_ENG = Path("~/Desktop/Clinical-note-extraction-with-LLM-models/dataset_notes/clin_note_df.tsv").expanduser()
 DF_DK = Path("~/Desktop/Clinical-note-extraction-with-LLM-models/dataset_notes/clin_note_danish_df.tsv").expanduser()
+RESULTS = Path("~/Desktop/Clinical-note-extraction-with-LLM-models/results").expanduser()
 
 # Set the batch size and number of epochs for training
-BATCH_SIZE = 1
+BATCH_SIZE = 5
 NUM_EPOCHS = 1
 
 def main():
     # Condition statement
-    parse_data(data_folder_path=DATA_FOLDER, df_eng_path=DF_ENG, df_dk_path=DF_DK)
+    parse_data(data_folder_path=DATA_FOLDER, df_eng_path=DF_ENG, df_dk_path=DF_DK, results=RESULTS)
     # Parse dataset
     df_eng = pd.read_csv(DF_ENG, sep="\t", dtype=object)
     df_dk = pd.read_csv(DF_DK, sep="\t", dtype=object)
 
     # Preproces and extract clinical notes
     clinical_notes_list = df_dk["clinical_notes"].tolist()
+    # Split clinical notes into train and test sets
     train_text, test_text = train_test_split(clinical_notes_list, train_size=0.2, random_state=42) 
 
     # results = mask_words(llm_model=LLM_MODEL, train_text=train_text, test_text=test_text)    
@@ -51,7 +53,7 @@ def main():
     # response = model(df_eng=df_eng, keyword=KEYWORD)
     # print(response, "\n\n")
     # Respond of the model (Dansish)
-    response_danish = model_danish(df_dk=df_dk, keyword=KEYWORD)
+    response_danish = model_danish(df_dk=df_dk, keyword=KEYWORD, batch_size=BATCH_SIZE)
     print(response_danish)
 
 
