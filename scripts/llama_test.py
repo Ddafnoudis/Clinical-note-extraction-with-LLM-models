@@ -4,7 +4,7 @@ Training an Large Language Model (LLM) in Danish clinical text data
 import torch
 torch.cuda.empty_cache()
 import gc
-gc.collect()
+
 from pathlib import Path
 from datasets import Dataset
 from torch.utils.data import DataLoader
@@ -23,7 +23,7 @@ from pandas import DataFrame
 from sklearn.model_selection import train_test_split
 
 
-def llama_test(df_dk: DataFrame, llm_model: Path, model_path: Path, tokenizer_path: Path, batch_size: int, new_model: str, num_epochs: int):
+def llama_test(df_dk: DataFrame, llm_model: Path,  batch_size: int, new_model: str, num_epochs: int):
     """
     Train the Llama3 model in danish clinical text data
     """
@@ -59,6 +59,9 @@ def llama_test(df_dk: DataFrame, llm_model: Path, model_path: Path, tokenizer_pa
     # Convert to list
     clinical_notes_list = clinical_notes_preprocessed.tolist()  
 
+    clinical_notes_list = clinical_notes_list[:5]
+    # print(clinical_notes_list);exit()
+
     # Split the data into training and test sets
     train_texts, val_texts = train_test_split(clinical_notes_list, test_size=0.2, random_state=42)
     
@@ -67,7 +70,7 @@ def llama_test(df_dk: DataFrame, llm_model: Path, model_path: Path, tokenizer_pa
     #print(train_dataset);exit()
     val_dataset = Dataset.from_dict({"text": val_texts})
 
-    train_df_loader = DataLoader(train_dataset, batch_size=1, shuffle=True)
+    train_df_loader = DataLoader(train_dataset, batch_size=1, shuffle=True, pin_memory=True)
     # for batch in train_df_loader:
     #     print(batch)
     val_df_loader = DataLoader(val_dataset, batch_size=1, shuffle=False)
@@ -78,13 +81,13 @@ def llama_test(df_dk: DataFrame, llm_model: Path, model_path: Path, tokenizer_pa
         output_dir="./results",
         use_cpu=True,
         num_train_epochs=num_epochs,
-        per_device_train_batch_size=1,
-        gradient_accumulation_steps=1,
+        per_device_train_batch_size=batch_size,
+        gradient_accumulation_steps=10,
         optim="adamw_torch",
         learning_rate=5e-5,
         weight_decay=0.01,
         logging_dir="./logs",
-        logging_steps=10,
+        logging_steps=5,
         save_steps=0,
         fp16=False,  # Unable mixed precision training
         bf16=False,  # Disable bfloat16
@@ -97,6 +100,7 @@ def llama_test(df_dk: DataFrame, llm_model: Path, model_path: Path, tokenizer_pa
     )
 
     torch.cuda.empty_cache()
+    gc.collect()
 
     # Set supervised fine-tuning parameters
     trainer = SFTTrainer(
@@ -111,17 +115,29 @@ def llama_test(df_dk: DataFrame, llm_model: Path, model_path: Path, tokenizer_pa
     optimizer = torch.optim.AdamW(model.parameters(), lr=5e-5)
 
     for epoch in range(num_epochs):
-        model.train()
+        print(f"Epoch {epoch+1}/{num_epochs}")
+        epoch_loss = 0.0
         for batch in train_df_loader:
             inputs = tokenizer(batch["text"], return_tensors="pt", padding=True, truncation=True, max_length=512)
             inputs = {key: val.to(device) for key, val in inputs.items()}
             outputs = model(**inputs, labels=inputs["input_ids"])
             loss = outputs.loss
+            epoch_loss += loss.item()
             loss.backward()
             optimizer.step()
             optimizer.zero_grad()
+            gc.collect()
             torch.cuda.empty_cache()
-    # Train model
+        
+        average_loss = epoch_loss / len(train_df_loader)
+        print(f"Average loss for epoch {epoch+1}: {average_loss:.4f}")
+        
+        # Optionally, you can add validation here
+        # model.eval()
+        # ... (validation code)
+        # model.train()
+
+    print("Training completed.")    # Train model
     # trainer.train()
 
     # Save trained model

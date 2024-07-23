@@ -12,6 +12,7 @@ import time
 import ollama
 import random
 from tqdm import tqdm
+from pathlib import Path
 from pandas import DataFrame
 from typing import List, Tuple
 
@@ -20,7 +21,7 @@ from typing import List, Tuple
 sys.stdout.reconfigure(encoding="utf-8")
 
 
-def model_danish(df_dk: DataFrame, keyword: str, batch_size: int)-> List[Tuple[str]]:
+def model_danish(df_dk: DataFrame, keyword: str, batch_size: int, chat_output: Path)-> List[Tuple[str]]:
     """
     Extract symptoms from danish clinical notes using Ollama library 
     """
@@ -61,7 +62,7 @@ def model_danish(df_dk: DataFrame, keyword: str, batch_size: int)-> List[Tuple[s
             # Append to the list
             response_list.append(response_content)
             # Save the response list to a file
-            with open('response_list.txt', 'w', encoding='utf-8') as file:
+            with open(chat_output, 'w', encoding='utf-8') as file:
                 for response in response_list:
                     file.write(response + '\n\n')
 
