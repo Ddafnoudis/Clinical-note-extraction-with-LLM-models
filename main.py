@@ -12,10 +12,11 @@ from scripts.llama_train_in_danish import train_llama3
 from sklearn.model_selection import train_test_split
 
 # Define keyword and paths
-KEYWORD = input("Enter the word that you are interested in: ")
+# KEYWORD = input("Enter the word that you are interested in: ")
 LLM_MODEL = Path("~/Desktop/Clinical-note-extraction-with-LLM-models/AI-Sweden-Models/Llama-3-8B").expanduser()
-MODEL_PATH = f"{LLM_MODEL}/model-00004-of-00004.safetensors"
-TOKENIZER_PATH = Path("~/Desktop/Clinical-note-extraction-with-LLM-models/AI-Sweden-Models/Llama-3-8B/tokenizer.json").expanduser()
+
+MODEL_PATH = Path("~/Desktop/Clinical-note-extraction-with-LLM-models/punk-llama3-11.5B-mlm-full").expanduser()
+TOKENIZER_PATH = "AI-Sweden-Models/Llama-3-8B/tokenizer.json"
 # Fine-tuned model name
 NEW_MODEL=  Path("~/Desktop/Clinical-note-extraction-with-LLM-models/AI-Sweden-Models/Llama-3-8B/llama-3-8b-danish")
 DATA_FOLDER = Path("~/Desktop/Clinical-note-extraction-with-LLM-models/dataset_notes").expanduser()
@@ -23,6 +24,7 @@ DF_ENG = Path("~/Desktop/Clinical-note-extraction-with-LLM-models/dataset_notes/
 DF_DK = Path("~/Desktop/Clinical-note-extraction-with-LLM-models/dataset_notes/clin_note_danish_df.tsv").expanduser()
 RESULTS = Path("~/Desktop/Clinical-note-extraction-with-LLM-models/results").expanduser()
 CHAT_OUTPUT = Path("~/Desktop/Clinical-note-extraction-with-LLM-models/results/response_list.txt").expanduser()
+
 
 # Set the batch size and number of epochs for training
 BATCH_SIZE = 5
@@ -41,7 +43,7 @@ def main():
     # Split clinical notes into train and test sets
     train_text, test_text = train_test_split(clinical_notes_list, train_size=0.2, random_state=42) 
 
-    # results = mask_words(llm_model=LLM_MODEL, train_text=train_text, test_text=test_text)    
+    results = mask_words(llm_model=LLM_MODEL, train_text=train_text, test_text=test_text, model_path=MODEL_PATH)    
     # print(results)
 
     # Train the model
@@ -55,8 +57,8 @@ def main():
     # response = model(df_eng=df_eng, keyword=KEYWORD)
     # print(response, "\n\n")
     # Respond of the model (Dansish)
-    response_danish = model_danish(df_dk=df_dk, keyword=KEYWORD, batch_size=BATCH_SIZE, chat_output=CHAT_OUTPUT)
-    print(response_danish)
+    # response_danish = model_danish(df_dk=df_dk, keyword=KEYWORD, batch_size=BATCH_SIZE, chat_output=CHAT_OUTPUT)
+    # print(response_danish)
 
 
 if __name__ == "__main__":
