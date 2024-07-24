@@ -15,6 +15,7 @@ def mask_words(train_text: List[str], test_text: List[str], llm_model: str, mode
    
     pipe = pipeline("fill-mask", model=llm_model)
     tokenizer = AutoTokenizer.from_pretrained(llm_model)
+    
     model = LlamaForCausalLM.from_pretrained(llm_model)
 
     masked_token = "[MASK]"
