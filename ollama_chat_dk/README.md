@@ -1,3 +1,8 @@
-# Integrating Large Language Models into Clinical Notes: Symptom Extraction project 
+# Chating with ollama (llama3) model for extraction of symptoms from clinical danish text
 
-A project that see the performance of Llama3 model in the training into clinical notes and the extraction of symptoms based on condition.
+The <ollama_chat_dk> folder generates two DataFrames, one in English and one in Danish. We use the Danish dummy clinical notes.
+
+We create chat using ollama(llama3) chat model and we figure the prompts that:
+1) Give the input text data to the model
+2) Gives the prompts
+3) Stores the results
