@@ -1,13 +1,16 @@
+"""
+Preprocess the clinical text data LLM training
+"""
 import sys
 import pandas as pd
 from typing import List
 from pathlib import Path
-from pandas import DataFrame
 from sklearn.model_selection import train_test_split
 
 
 def preprocessing_text(df_danish_path: Path)-> List[str]:
     """
+    Preprocessing the danish clinical text data
     """
     # Reconfigure the standard output stream to use UTF-8 encoding.
     sys.stdout.reconfigure(encoding="utf-8")

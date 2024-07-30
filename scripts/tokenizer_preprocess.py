@@ -1,4 +1,6 @@
 """
+Defines the special tokens and the tokenization
+Using those it defines the tokenizer
 """
 # Tokenization library
 import tiktoken
@@ -7,6 +9,7 @@ from typing import Dict
 
 def preprocess_tokenizer(tokenizer_model: Dict)-> tiktoken.core.Encoding:
     """
+    Define the tokenizer
     """
     # Create structured markets to convert input text to tokens
     special_tokens = [

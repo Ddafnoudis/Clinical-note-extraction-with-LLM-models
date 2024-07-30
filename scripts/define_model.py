@@ -1,3 +1,9 @@
+"""
+Define the files that have been downloaded from Meta-Llama-3.1-8B
+Params: 1) Model
+        2) Tokenizer
+        3) Parameters
+"""
 import json
 import torch
 from typing import Dict

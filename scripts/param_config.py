@@ -1,11 +1,12 @@
 """
 """
 import torch
-from typing import Dict, List
+from typing import Dict, Any
 
 
-def param_configuration(config: Dict)-> int:
+def param_configuration(config: Dict)-> Any:
     """
+    Define the parameters
     """
     # Store the values from the parameters of the model
     # Dimension
