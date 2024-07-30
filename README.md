@@ -1,1 +1,1 @@
-# LLama3 chating and training LLM from scratch
+# LLama3 chat and train LLM from scratch
