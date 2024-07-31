@@ -17,9 +17,16 @@ def model_config(tokenizer: str, model: str, params: str)-> Dict:
     # Load tokenizer
     tokenizer = load_tiktoken_bpe(tokenizer)
     print("Tokenizer has been loaded\n")
-    # Load the models
+
+    # Load the model
     model = torch.load(model)
     print("Model has been loaded!\n")
+
+    # Define the first 20 keys of the models
+    twenty_models_keys = '\n'.join(list(model.keys())[:20])
+    # Print the 20 keys of the model
+    print(f"The first 20 keys of the model are: \n{twenty_models_keys}\n")
+    
     # Open the parameters JSON file
     with open(params, "r") as f:
         params_config = json.load(f)
