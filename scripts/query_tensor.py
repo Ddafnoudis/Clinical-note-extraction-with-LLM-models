@@ -29,14 +29,14 @@ def query_tensor(model: Dict, n_heads:int, dim: int, token: torch.Tensor, token_
     zero_to_one_split_into_64_parts = torch.tensor(range(64))/64
     # Calculate frequencies using a power operation (1-D for the vecs2)
     frequencies = 1.0 / (rope_theta ** zero_to_one_split_into_64_parts)
-
+    print(f" Type of frequencies: {type(frequencies)}")
     # Convert queries per token to complex numbers
     q_per_token_as_compl_num = torch.view_as_complex(q_per_t_split_into_pairs)
     # Calculate frequencies for each token using outer product of arange(17) and freqs
     freqs_for_each_token = torch.outer(torch.arange(70), vec2=frequencies)
     # Calculate complex numbers 
     freqs_cis = torch.polar(torch.ones_like(freqs_for_each_token), freqs_for_each_token)
-
+    print(f"The type of Frequencies cis: {type(freqs_cis)}")
     q_per_token_as_complex_num_rotated = q_per_token_as_compl_num * freqs_cis
     
     # Convert rotated complex numbers back to real numbers
@@ -44,6 +44,8 @@ def query_tensor(model: Dict, n_heads:int, dim: int, token: torch.Tensor, token_
     # print(q_per_t_split_into_pairs_rotated.shape)
     q_per_token_rotated = q_per_t_split_into_pairs_rotated.view(q_per_token.shape)
     # print(q_per_token_rotated.shape)
+
+    return q_per_token_rotated, freqs_cis
 
 
 if __name__=="__main__":
