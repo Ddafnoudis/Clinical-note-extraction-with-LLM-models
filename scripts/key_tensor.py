@@ -4,7 +4,12 @@ import torch
 from typing import Dict
 
 
-def key_tensor(model: Dict, dim: int, n_kv_heads: int, token: torch.Tensor, token_embeddings: torch.Tensor):
+def key_tensor(model: Dict, 
+               dim: int, 
+               n_kv_heads: int, 
+               token: torch.Tensor, 
+               token_embeddings: torch.Tensor,
+               freqs_cis: torch.Tensor):
     """
     """
     # Retrieve the weight of the attentions mechanism's query in the first layer of the model
@@ -20,7 +25,14 @@ def key_tensor(model: Dict, dim: int, n_kv_heads: int, token: torch.Tensor, toke
     k_per_token = torch.matmul(token_embeddings, k_layer_head_0.T)
     # Split key per token into pairs and convert to float
     k_per_token_split_into_pairs = k_per_token.float().view(k_per_token.shape[0], -1, 2)
+    # Convert key per token to complex numbers
+    k_per_token_as_complex_num = torch.view_as_complex(k_per_token_split_into_pairs)
+    # Rotate complex key per token by frequencies
+    k_per_token_split_into_pairs_rotated = torch.view_as_real(k_per_token_as_complex_num * freqs_cis)
+    # Reshape rotated key per token to match the original shape
+    k_per_token_rotated = k_per_token_split_into_pairs_rotated.view(k_per_token.shape)
 
+    return k_per_token_rotated
 
 
 if __name__=="__main__":
