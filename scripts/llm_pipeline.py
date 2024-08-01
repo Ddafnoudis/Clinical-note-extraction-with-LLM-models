@@ -4,6 +4,7 @@ from scripts.tokize_input import tokenize_input
 from scripts.query_tensor import query_tensor
 from scripts.key_tensor import key_tensor
 from scripts.embending_layer import embedding_layer
+from scripts.self_attention import self_attention_qk
 from scripts.param_config import param_configuration
 from scripts.preprocessing_text import preprocessing_text
 from scripts.tokenizer_preprocess import preprocess_tokenizer
@@ -25,8 +26,16 @@ def llm_pipeline(df_dk_path: Path, tokenizer_model: Path,
     # Define the embedding tokens and normalize them
     token_embeddings = embedding_layer(model=model, vocab_size=vocab_size, dim=dim, tokens=tokens, norm_eps=norm_eps)
     #
-    query_tensor(model=model, n_heads=n_heads, dim=dim, token=tokens, token_embeddings=token_embeddings, rope_theta=rope_theta)
-    key_tensor(model=model, n_kv_heads=n_kv_heads, dim=dim, token=tokens, token_embeddings=token_embeddings)
+    q_per_token_rotated, freqs_cis = query_tensor(model=model, n_heads=n_heads, dim=dim, token=tokens, token_embeddings=token_embeddings, rope_theta=rope_theta)
+    k_per_token_rotated = key_tensor(freqs_cis=freqs_cis, model=model, n_kv_heads=n_kv_heads, dim=dim, token=tokens, token_embeddings=token_embeddings)
+    
+    # Implement Self-Attention
+    self_attention_qk(tokens=tokens,
+                      q_per_token_rotated=q_per_token_rotated,
+                      k_per_token_rotated=k_per_token_rotated)
+
+
+
 
 
 if __name__ =="__main__":
