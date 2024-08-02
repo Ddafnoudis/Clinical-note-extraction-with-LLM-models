@@ -5,7 +5,7 @@ from scripts.define_model import model_config
 from scripts.tokize_input import tokenize_input
 from scripts.query_tensor import query_tensor
 from scripts.key_tensor import key_tensor
-from scripts.embending_layer import embedding_layer
+from scripts.embendding_layer import embedding_layer
 from scripts.self_attention import self_attention_qkv
 from scripts.param_config import param_configuration
 from scripts.final import final_all_layers_merged
