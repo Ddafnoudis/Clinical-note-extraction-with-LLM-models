@@ -28,7 +28,7 @@ def final_all_layers_merged(token_embeddings_unnormal: torch.Tensor,
         return (tensor * normalized) * norm_weights
 
     # Iterate through each layer
-    for layer in tqdm(range(n_layers), desc="Progress", total=100.0, unit="layer"):
+    for layer in tqdm(range(n_layers), desc="Progress", total=n_layers, unit="layer"):
         # Initialize list to store QKV attentions for each head
         qkv_attention_store = []
         
