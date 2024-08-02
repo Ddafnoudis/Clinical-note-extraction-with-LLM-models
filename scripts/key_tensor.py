@@ -7,7 +7,6 @@ from typing import Dict
 def key_tensor(model: Dict, 
                dim: int, 
                n_kv_heads: int, 
-               token: torch.Tensor, 
                token_embeddings: torch.Tensor,
                freqs_cis: torch.Tensor):
     """
@@ -32,7 +31,7 @@ def key_tensor(model: Dict,
     # Reshape rotated key per token to match the original shape
     k_per_token_rotated = k_per_token_split_into_pairs_rotated.view(k_per_token.shape)
 
-    return k_per_token_rotated
+    return k_layer_0, k_per_token_rotated
 
 
 if __name__=="__main__":
