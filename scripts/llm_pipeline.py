@@ -14,6 +14,8 @@ from scripts.tokenizer_preprocess import preprocess_tokenizer
 from scripts.multi_head_attention import multi_head_attention
 from scripts.swiglu_act_funtion import swiglu_activation_function
 
+from scripts.mask_words import mask_words
+
 
 def llm_pipeline(df_dk_path: Path, tokenizer_model: Path,
                  model: Path, params_config: Path):
@@ -21,10 +23,16 @@ def llm_pipeline(df_dk_path: Path, tokenizer_model: Path,
     """
     # Configure the model
     tokenizer_model, model, params_config = model_config(tokenizer=tokenizer_model, model=model, params=params_config)
+    # Define the parameterss
     dim, n_layers, n_heads, n_kv_heads, vocab_size, multiple_of, ffn_dim_multiplier, norm_eps, rope_theta = param_configuration(config=params_config)
+    # Define the tokenizer
     tokenizer = preprocess_tokenizer(tokenizer_model=tokenizer_model)
     # Preprocess the clinical text data
     train_text, test_text = preprocessing_text(df_danish_path=df_dk_path)
+    # Mask words in the test set
+    masked_test_set = mask_words(test_text=test_text, mask_token="[MASK]", mask_prob=0.15)
+    print(f"\nMasked test: {masked_test_set}\n")
+    # print(f"Original words: {test_text}\n");exit()
     # Tokenize the tokens
     tokens = tokenize_input(tokenizer=tokenizer, train_text=train_text)
     # Define the embedding tokens and normalize them
@@ -46,6 +54,7 @@ def llm_pipeline(df_dk_path: Path, tokenizer_model: Path,
                        q_per_token_rotated=q_per_token_rotated,
                        k_per_token_rotated=k_per_token_rotated)
     
+    # Multi-Head Attention
     embedding_after_edit_normalized = multi_head_attention(n_heads=n_heads, q_layer_0=q_layer_0, 
                         k_layer_0=k_layer_0, v_layer_0=v_layer_0, 
                         tokens=tokens, token_embeddings=token_embeddings, 
@@ -62,7 +71,7 @@ def llm_pipeline(df_dk_path: Path, tokenizer_model: Path,
                             dim=dim, n_kv_heads=n_kv_heads, norm_eps=norm_eps,
                             freqs_cis=freqs_cis)
     
-
+    
 
 
 if __name__ =="__main__":
