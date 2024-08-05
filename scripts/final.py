@@ -1,5 +1,6 @@
 """
-Merge all the layers
+Merges all the layers of a neural network model by applying attention and 
+feedforward operations to the token embeddings
 """
 import torch
 from tqdm import tqdm
@@ -80,9 +81,10 @@ def final_all_layers_merged(token_embeddings_unnormal: torch.Tensor,
             mask = torch.full((len(token_embeddings_unnormal), len(token_embeddings_unnormal)), float("-inf"))
             # Set upper triangular part of the mask tensor to negative infinity
             mask = torch.triu(mask, diagonal=1)
+            # print(mask)
             # Add the mask to the query-key dot products per token
             qk_per_token_after_masking = qk_per_token + mask
-            
+            # print(qk_per_token_after_masking)
             # Apply softmax along the second dimension after masking
             qk_per_token_after_masking_after_softmax = torch.nn.functional.softmax(qk_per_token_after_masking, dim=1).to(torch.bfloat16)
             
