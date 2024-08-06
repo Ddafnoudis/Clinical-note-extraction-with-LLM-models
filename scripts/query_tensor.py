@@ -10,7 +10,7 @@ def query_tensor(model: Dict, n_heads:int, dim: int, token: torch.Tensor, token_
     ####################### QUERY #######################
     # Retrieve the weight of the attentions mechanism's query in the first layer of the model
     q_layer_0 = model["layers.0.attention.wq.weight"]
-    # Calculate the dimension per head
+    # Calculate the dimension per headgit 
     head_dim = q_layer_0.shape[0] // n_heads
     # Reshape the query
     q_layer_0 = q_layer_0.view(n_heads, head_dim, dim)
