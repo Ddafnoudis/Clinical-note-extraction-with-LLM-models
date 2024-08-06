@@ -23,6 +23,7 @@ def preprocess_tokenizer(tokenizer_model: Dict)-> tiktoken.core.Encoding:
     "<|end_header_id|>",  # Indicates the end of a header ID.
     "<|reserved_special_token_4|>",  # Reserved for future use.
     "<|eot_id|>",  # Marks the end of a turn (in a conversational context).
+    "[MASK]",
     ] + [f"<|reserved_special_token_{i}|>" for i in range(5, 256 - 5)]  # A large set of tokens reserved for future use.
     
     # Define the atterns based on which text will be break into tokens
