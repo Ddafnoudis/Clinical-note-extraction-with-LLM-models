@@ -10,7 +10,7 @@ def tokenize_input(tokenizer: tiktoken.core.Encoding, train_text: List[str])-> t
     # Iterate over the train text
     for text in train_text:
         # Enocde the train text and first use a special token. Allow the "[MASK]" special character 
-        tokens = [128000] + tokenizer.encode(text, allowed_special={'[MASK]'})
+        tokens = [128000] + tokenizer.encode(text, disallowed_special=())
         # Convert the list of tokens into a PyTorch tensor
         tokens = torch.tensor(tokens)
         # Decode each token back into its corresponding string for you to see
