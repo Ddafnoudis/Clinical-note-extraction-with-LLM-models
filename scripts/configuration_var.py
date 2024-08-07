@@ -18,6 +18,8 @@ def parse_config_files(fname)-> Dict[str, Path]:
     config["TOKENIZER"] = str(config["TOKENIZER"])
     config["LLM_MODEL"] = str(config["LLM_MODEL"])
     config["PARAMS"] = str(config["PARAMS"])
+    config["MASK_TOKEN"] = str(config["MASK_TOKEN"])
+    config["MASK_PROB"] = float(config["MASK_PROB"])
 
     return config
 
