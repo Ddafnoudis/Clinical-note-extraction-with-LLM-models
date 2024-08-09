@@ -22,7 +22,7 @@ def preprocessing_text(df_danish_path: Path)-> List[str]:
     train_text, test_text = train_test_split(clinical_notes_list, train_size=0.2, random_state=42) 
     # print(type(train_text))
 
-    return train_text, test_text
+    return train_text, test_text, clinical_notes_list
 
 
 if __name__=="__main__":

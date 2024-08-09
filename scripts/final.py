@@ -6,10 +6,11 @@ import torch
 from tqdm import tqdm
 from typing import Dict
 
+
 def final_all_layers_merged(token_embeddings_unnormal: torch.Tensor, 
                             model: Dict, n_layers: int, n_heads: int,
                             dim: int, n_kv_heads: int, norm_eps: int,
-                            freqs_cis: torch.Tensor):
+                            freqs_cis: torch.Tensor)-> torch.Tensor:
     """
     """
     # Initialize final embedding with unnormalized token embeddings
@@ -118,12 +119,14 @@ def final_all_layers_merged(token_embeddings_unnormal: torch.Tensor,
         # Update the final embedding with the edited embedding plus the output from the feedforward layer
         final_embedding = embedding_after_edit + output_after_feedforward
 
-        # Normalize the final embedding using root mean square normalization and provided weights
+    # Normalize the final embedding using root mean square normalization and provided weights
     final_embedding = rms_norm(final_embedding, 
                                norm_weights=model["norm.weight"])
 
     # Print the shape of the resulting normalized final embedding
     print(f"Shape of the final embedding: {final_embedding.shape}")
+
+    return final_embedding
 
 
 if __name__=="__main__":
