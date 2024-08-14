@@ -20,6 +20,7 @@ def parse_config_files(fname)-> Dict[str, Path]:
     config["PARAMS"] = str(config["PARAMS"])
     config["MASK_TOKEN"] = str(config["MASK_TOKEN"])
     config["MASK_PROB"] = float(config["MASK_PROB"])
+    config["MASK_TOKEN_ID"] = int(config["MASK_TOKEN_ID"])
 
     return config
 
