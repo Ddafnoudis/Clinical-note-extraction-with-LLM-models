@@ -9,3 +9,4 @@ PARAMS: "llama3_1/Meta-Llama-3.1-8B-Instruct/params.json"
 # Define the special token and the masked probability 
 MASK_TOKEN: "[MASK]"
 MASK_PROB: 0.15
+MASK_TOKEN_ID: 220
