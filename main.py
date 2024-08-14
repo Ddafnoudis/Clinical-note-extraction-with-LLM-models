@@ -11,7 +11,8 @@ def main():
 
     llm_pipeline(df_dk_path=config["DF_DK"], tokenizer_model=config["TOKENIZER"],
                  model=config["LLM_MODEL"], params_config=config["PARAMS"],
-                 mask_token=config["MASK_TOKEN"], mask_prob=config["MASK_PROB"])
+                 mask_token=config["MASK_TOKEN"], mask_prob=config["MASK_PROB"],
+                 mask_token_id=config["MASK_TOKEN_ID"])
     
 
 if __name__=="__main__":
