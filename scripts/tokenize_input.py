@@ -13,10 +13,10 @@ def tokenize_input(tokenizer: tiktoken.core.Encoding, masked_clinical_notes: Lis
         tokens = [128000] + tokenizer.encode(text, allowed_special={"[MASK]"})
         # Convert the list of tokens into a PyTorch tensor
         tokens = torch.tensor(tokens)
+        # print(tokens)
         # Decode each token back to string (Need to be in list)
         tokens_decoded = tokenizer.decode(tokens.tolist())
-        print(tokens_decoded)
-        print(tokens)
+        # print(tokens_decoded)
 
     return tokens
 
