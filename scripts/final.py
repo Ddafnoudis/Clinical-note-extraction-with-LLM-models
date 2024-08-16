@@ -153,15 +153,39 @@ class LLama3_1(nn.Module):
         self.norm_eps = norm_eps
         self.freqs_cis = freqs_cis
         
-        self.attention_norm_weights = nn.ParameterList([nn.Parameter(torch.tensor(model[f"layers.{i}.attention_norm.weight"])) for i in range(n_layers)])
-        self.attention_wq_weights = nn.ParameterList([nn.Parameter(torch.tensor(model[f"layers.{i}.attention.wq.weight"])) for i in range(n_layers)])
-        self.attention_wk_weights = nn.ParameterList([nn.Parameter(torch.tensor(model[f"layers.{i}.attention.wk.weight"])) for i in range(n_layers)])
-        self.attention_wv_weights = nn.ParameterList([nn.Parameter(torch.tensor(model[f"layers.{i}.attention.wv.weight"])) for i in range(n_layers)])
-        self.attention_wo_weights = nn.ParameterList([nn.Parameter(torch.tensor(model[f"layers.{i}.attention.wo.weight"])) for i in range(n_layers)])
-        self.ffn_norm_weights = nn.ParameterList([nn.Parameter(torch.tensor(model[f"layers.{i}.ffn_norm.weight"])) for i in range(n_layers)])
-        self.ffn_w1_weights = nn.ParameterList([nn.Parameter(torch.tensor(model[f"layers.{i}.feed_forward.w1.weight"])) for i in range(n_layers)])
-        self.ffn_w2_weights = nn.ParameterList([nn.Parameter(torch.tensor(model[f"layers.{i}.feed_forward.w2.weight"])) for i in range(n_layers)])
-        self.ffn_w3_weights = nn.ParameterList([nn.Parameter(torch.tensor(model[f"layers.{i}.feed_forward.w3.weight"])) for i in range(n_layers)])
+        # Correctly initialize the token embedding weights across layers
+        self.tok_embeddings_weights = nn.ParameterList([
+            nn.Parameter(torch.tensor(model["tok_embeddings.weight"])) for _ in range(n_layers)
+        ])
+        
+        # Initialize other weights
+        self.attention_norm_weights = nn.ParameterList([
+            nn.Parameter(torch.tensor(model[f"layers.{i}.attention_norm.weight"])) for i in range(n_layers)
+        ])
+        self.attention_wq_weights = nn.ParameterList([
+            nn.Parameter(torch.tensor(model[f"layers.{i}.attention.wq.weight"])) for i in range(n_layers)
+        ])
+        self.attention_wk_weights = nn.ParameterList([
+            nn.Parameter(torch.tensor(model[f"layers.{i}.attention.wk.weight"])) for i in range(n_layers)
+        ])
+        self.attention_wv_weights = nn.ParameterList([
+            nn.Parameter(torch.tensor(model[f"layers.{i}.attention.wv.weight"])) for i in range(n_layers)
+        ])
+        self.attention_wo_weights = nn.ParameterList([
+            nn.Parameter(torch.tensor(model[f"layers.{i}.attention.wo.weight"])) for i in range(n_layers)
+        ])
+        self.ffn_norm_weights = nn.ParameterList([
+            nn.Parameter(torch.tensor(model[f"layers.{i}.ffn_norm.weight"])) for i in range(n_layers)
+        ])
+        self.ffn_w1_weights = nn.ParameterList([
+            nn.Parameter(torch.tensor(model[f"layers.{i}.feed_forward.w1.weight"])) for i in range(n_layers)
+        ])
+        self.ffn_w2_weights = nn.ParameterList([
+            nn.Parameter(torch.tensor(model[f"layers.{i}.feed_forward.w2.weight"])) for i in range(n_layers)
+        ])
+        self.ffn_w3_weights = nn.ParameterList([
+            nn.Parameter(torch.tensor(model[f"layers.{i}.feed_forward.w3.weight"])) for i in range(n_layers)
+        ])
 
 
     def rms_norm(self, tensor: torch.Tensor, norm_weights: torch.Tensor) -> torch.Tensor:

@@ -102,9 +102,6 @@ def find_mask_indices(masked_clinical_notes)-> List[int]:
             mask_indices.append([i, index])
             # Move the starting point to the next position after [MASK]
             start = index + len("[MASK]")
-
-    # print(mask_indices)
-    # print(type(mask_indices));exit()
     
     return mask_indices
 

@@ -23,13 +23,13 @@ def model_config(tokenizer: str, model: str, params: str)-> Dict:
     print("Model has been loaded!\n")
 
     # Define the first 5 keys of the models
-    twenty_models_keys = '\n'.join(list(model.keys())[:5])
+    twenty_models_keys = '\n'.join(list(model.keys()))
     # Print the 20 keys of the model
     print(f"The first 20 keys of the model are: \n{twenty_models_keys}\n")
     # Define the last 10 keys of the model
-    last_ten_model_keys = '\n'.join(list(model.keys())[-10:])
+    # last_ten_model_keys = '\n'.join(list(model.keys())[-10:])
     # Print the last 10 keys of the model
-    print(f"The last 10 keys of the model are: \n{last_ten_model_keys}\n")
+    # print(f"The last 10 keys of the model are: \n{last_ten_model_keys}\n")
 
     # Open the parameters JSON file
     with open(params, "r") as f:

@@ -45,9 +45,10 @@ def llm_pipeline(df_dk_path: Path, tokenizer_model: Path,
     
     # print(masked_clinical_notes)
     mask_indices = find_mask_indices(masked_clinical_notes=masked_clinical_notes)
-    # print(mask_indices);exit()
+    print(f"Type of Mask indices: {type(mask_indices)}")
+    print(mask_indices[:5])
     # Tokenize words
-    tokens = tokenize_input(tokenizer=tokenizer, masked_clinical_notes=masked_clinical_notes)
+    tokens = tokenize_input(tokenizer=tokenizer, masked_clinical_notes=train_masked_notes)
     print(f"Tokens tensor shape: {tokens.shape}")
     # Define the embedding tokens and normalize them
     token_embeddings, token_embeddings_unnormal = embedding_layer(model=model, vocab_size=vocab_size, dim=dim, tokens=tokens, norm_eps=norm_eps)
@@ -59,8 +60,7 @@ def llm_pipeline(df_dk_path: Path, tokenizer_model: Path,
                      dim=dim, n_kv_heads=n_kv_heads, norm_eps=norm_eps,
                      freqs_cis=freqs_cis)
     # Check the number of trainable parameters
-    # print(f"Number of trainable parameters: {sum(p.numel() for p in model.parameters() if p.requires_grad)}")
-
+    print(f"Number of trainable parameters: {sum(p.numel() for p in model.parameters() if p.requires_grad)}")
 
     num_epochs=10 
     learning_rate=1e-4

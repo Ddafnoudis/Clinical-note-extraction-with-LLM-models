@@ -7,6 +7,7 @@ Params: 1) Model
         5) Normalized weights = model["layers.0.attention_norm.weight"]
 """
 import torch
+import torch.nn as nn
 from typing import Dict
 
 
@@ -16,8 +17,8 @@ def embedding_layer(model: Dict, vocab_size: int, dim: int, tokens: torch.Tensor
     """
     # Define the embedding layer with the dimension and vocabulary size
     embedding_layer = torch.nn.Embedding(vocab_size, dim)
-    # Copy the pre-trained token embeddings to the embedding layer
-    embedding_layer.weight.data.copy_(model["tok_embeddings.weight"])
+    # Copy pre-trained token embeddings to the embedding layer
+    embedding_layer.weight.data.copy_(model["tok_embeddings.weight"])   
     # Convert token embedding to torch.bfloat16
     token_embeddings_unnormal = embedding_layer(tokens).to(torch.bfloat16)
 
