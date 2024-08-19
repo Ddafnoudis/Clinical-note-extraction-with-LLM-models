@@ -2,8 +2,8 @@
 DF_DK: "dataset_notes/clin_note_danish_df.tsv"
 
 # Define the paths of the model and the model's tokenizer
-TOKENIZER: "llama3_1/Meta-Llama-3.1-8B-Instruct/tokenizer.model"
-LLM_MODEL: "llama3_1/Meta-Llama-3.1-8B-Instruct/consolidated.00.pth"
+TOKENIZER: "llama3_1/Meta-Llama-3.1-8B/tokenizer.model"
+LLM_MODEL: "llama3_1/Meta-Llama-3.1-8B/consolidated.00.pth"
 PARAMS: "llama3_1/Meta-Llama-3.1-8B-Instruct/params.json"
 
 # Define the special token and the masked probability 
