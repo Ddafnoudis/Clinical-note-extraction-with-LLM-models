@@ -35,8 +35,6 @@ def query_tensor(model: Dict, n_heads:int, dim: int, token: torch.Tensor, token_
     freqs_for_each_token = torch.outer(torch.arange(len(q_per_token_as_compl_num)), vec2=frequencies)
     # Calculate complex numbers 
     freqs_cis = torch.polar(torch.ones_like(freqs_for_each_token), freqs_for_each_token)
-    print(freqs_cis.shape)
-    print(q_per_token_as_compl_num.shape)
     q_per_token_as_complex_num_rotated = q_per_token_as_compl_num * freqs_cis
     
     # Convert rotated complex numbers back to real numbers

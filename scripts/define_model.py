@@ -19,7 +19,7 @@ def model_config(tokenizer: str, model: str, params: str)-> Dict:
     print("Tokenizer has been loaded\n")
 
     # Load the model
-    model = torch.load(model)
+    model = torch.load(model, map_location=torch.device('cpu'))
     print("Model has been loaded!\n")
 
     # Define the first 5 keys of the models

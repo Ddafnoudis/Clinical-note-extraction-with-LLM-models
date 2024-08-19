@@ -55,12 +55,13 @@ def llm_pipeline(df_dk_path: Path, tokenizer_model: Path,
     print(f"\nToken Embeddings Shape: {token_embeddings.shape}\n")
     print(f"\nToken Embeddings Unnormalized shape: {token_embeddings_unnormal.shape}\n")
     q_layer_0, q_per_token_rotated, freqs_cis = query_tensor(model=model, n_heads=n_heads, dim=dim, token=tokens, token_embeddings=token_embeddings, rope_theta=rope_theta)
-
+    
     model = LLama3_1(model=model, n_layers=n_layers, n_heads=n_heads,
                      dim=dim, n_kv_heads=n_kv_heads, norm_eps=norm_eps,
                      freqs_cis=freqs_cis)
     # Check the number of trainable parameters
     print(f"Number of trainable parameters: {sum(p.numel() for p in model.parameters() if p.requires_grad)}")
+    
 
     num_epochs=10 
     learning_rate=1e-4
