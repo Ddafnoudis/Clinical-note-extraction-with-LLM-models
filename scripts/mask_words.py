@@ -80,7 +80,7 @@ def mask_words(clinical_notes_list: List[str],
     return masked_clinical_notes, train_masked_notes, test_masked_notes
 
 
-def find_mask_indices(masked_clinical_notes)-> List[int]:
+def find_mask_indices(test_masked_notes)-> List[int]:
     """
     Find the indices of [MASK] words in the masked clinical notes
     """
@@ -88,7 +88,7 @@ def find_mask_indices(masked_clinical_notes)-> List[int]:
     mask_indices = []
 
     # Iterate over the masked clinical notes.
-    for i, sentence in enumerate(masked_clinical_notes):
+    for i, sentence in enumerate(test_masked_notes):
         # Create the starting point
         start = 0
         # Iterate ove the sentence

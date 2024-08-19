@@ -1,11 +1,11 @@
 """
 """
 import torch
-from typing import List, Tuple
+from typing import List, Dict
 
 
 def predict_masked_tokens(mask_indices: List[int], 
-                          model: torch.nn.Module, 
+                          model: Dict, 
                           tokenizer: torch.Tensor, 
                           masked_clinical_notes: List[str]) -> List[str]:
     """
