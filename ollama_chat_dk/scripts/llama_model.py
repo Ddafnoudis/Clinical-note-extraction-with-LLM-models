@@ -21,13 +21,71 @@ from typing import List, Tuple
 sys.stdout.reconfigure(encoding="utf-8")
 
 
+def model_english(df_eng: DataFrame, keyword: str, batch_size: int, chat_output: Path)-> List[Tuple[str]]:
+    """
+    Extract symptoms from danish clinical notes using Ollama library 
+    """
+    # Pull model
+    try:
+        ollama.pull("llama3.1")
+        print("Model has been pulled")
+    except Exception as error:
+        print("Error", error)
+
+    # Define the clinical notes
+    clinical_notes = df_eng["clinical_notes"]
+
+    # Split the clinical_notes DataFrame into batches of size batch_size.
+    batches = [clinical_notes[i:i + batch_size] for i in range(0, len(clinical_notes), batch_size)]
+
+    # Create a list to store the response of the model
+    response_list = []
+
+    # Iterate over batches
+    for batch in tqdm(batches, desc="Processing batches"):
+        # Construct the message for the current batch
+        messages = [
+            {
+                "role": "user",
+                "content": (
+                    f"Given the following clinical notes, please identify the patients diagnosed with {keyword} "
+                    f"in the text. Find their symptoms and write only the symptoms using comma (e.g Patient Index 1: Symptom1, symptom2 ..., symptom) else if the patient in: {batch} do not has {keyword}, write the patient index and None and the disease and nothing else about them (e.g Patient Index 1: None):\n" + "\n\n".join(batch)
+                )
+            }
+        ]
+
+        try:
+            # Define the response of the model
+            response = ollama.chat(model='llama3.1', messages=messages)
+            # Define the response of the moder
+            response_content = response["message"]["content"]
+            # Append to the list
+            response_list.append(response_content)
+            # Save the response list to a file
+            with open(chat_output, 'w', encoding='utf-8') as file:
+                for response in response_list:
+                    file.write(response + '\n\n')
+
+            # Wait before use the chat again
+            time.sleep(random.randint(1, 3))
+        # Create an exception if error occured during response
+        except Exception as error:
+            print(f"{error}")
+    
+    return response_content
+
+
+if __name__ == "__main__":
+    model_english()
+
+
 def model_danish(df_dk: DataFrame, keyword: str, batch_size: int, chat_output: Path)-> List[Tuple[str]]:
     """
     Extract symptoms from danish clinical notes using Ollama library 
     """
     # Pull model
     try:
-        ollama.pull("llama3")
+        ollama.pull("llama3.1")
         print("Model has been pulled")
     except Exception as error:
         print("Error", error)
@@ -56,7 +114,7 @@ def model_danish(df_dk: DataFrame, keyword: str, batch_size: int, chat_output: P
 
         try:
             # Define the response of the model
-            response = ollama.chat(model='llama3', messages=messages)
+            response = ollama.chat(model='llama3.1', messages=messages)
             # Define the response of the moder
             response_content = response["message"]["content"]
             # Append to the list
