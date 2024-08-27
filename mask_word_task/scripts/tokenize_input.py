@@ -16,10 +16,8 @@ def tokenize_input(tokenizer: tiktoken.core.Encoding, train_text: List[str])-> t
         tokens = [128000] + tokenizer.encode(text, allowed_special={"[MASK]"})
         # Convert the list of tokens into a PyTorch tensor
         tokens = torch.tensor(tokens)
-        # print(tokens)
         # Decode each token back to string (Need to be in list)
         tokens_decoded = tokenizer.decode(tokens.tolist())
-        # print(tokens_decoded)
 
     return tokens
 
