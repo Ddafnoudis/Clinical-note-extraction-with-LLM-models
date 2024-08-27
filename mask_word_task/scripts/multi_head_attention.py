@@ -1,4 +1,5 @@
 """
+Perform Multi-Head Attention
 """
 import torch
 from typing import Dict
@@ -10,6 +11,7 @@ def multi_head_attention(model: Dict, n_heads: int, token_embeddings: torch.Tens
                          freqs_cis: torch.Tensor, token_embeddings_unnormal: torch.Tensor,
                          norm_eps: int):
     """
+    Perform Multi-Head Attention
     """
     # Create an empty list to store Query, Key, Value attention of each head
     qkv_attention_list = []
