@@ -20,8 +20,7 @@ def preprocessing_text(df_danish_path: Path)-> List[str]:
     clinical_notes_list = df_dk["clinical_notes"].tolist()
     # Split clinical notes into train and test sets
     train_text, test_text = train_test_split(clinical_notes_list, train_size=0.2, random_state=42) 
-    # print(type(train_text))
-
+    
     return train_text, test_text, clinical_notes_list
 
 
