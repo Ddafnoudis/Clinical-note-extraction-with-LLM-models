@@ -1,4 +1,5 @@
 """
+Define the parameters of the model
 """
 import torch
 from typing import Dict, Any
