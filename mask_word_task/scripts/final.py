@@ -12,6 +12,8 @@ def final_all_layers_merged(token_embeddings_unnormal: torch.Tensor,
                             dim: int, n_kv_heads: int, norm_eps: int,
                             freqs_cis: torch.Tensor)-> torch.Tensor:
     """
+    Merge all the layers of a neural network model by applying attention and 
+    feedforward operations to the token embeddings.
     """
     # Initialize final embedding with unnormalized token embeddings
     final_embedding = token_embeddings_unnormal
