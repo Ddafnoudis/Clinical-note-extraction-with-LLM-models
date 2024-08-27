@@ -1,4 +1,6 @@
 """
+Interact with the architecture of the Llama-3.1 model for masking words prediction tasks.
+Load the model, tokenizer and the parameters. The clinical text is in Danish. 
 """
 from pathlib import Path
 from scripts.key_tensor import key_tensor
@@ -22,6 +24,12 @@ def llm_pipeline(df_dk_path: Path, tokenizer_model: Path,
                  mask_token: str, mask_prob: float,
                  mask_token_id=int):
     """
+    Params: 1) Load the model, tokenizer and the parameters
+            2) Define the tokenizer
+            3) Preprocess the clinical text data. Mask the words and tokenize
+            4) Create the embedding layer and implement Sefl Attention
+            5) Implement Multi-Head Attention
+            6) Generate the final embedding layer
     """
     # Configure the model
     tokenizer_model, model, params_config = model_config(tokenizer=tokenizer_model, model=model, params=params_config)
