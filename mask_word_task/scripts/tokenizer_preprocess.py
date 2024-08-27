@@ -13,18 +13,18 @@ def preprocess_tokenizer(tokenizer_model: Dict)-> tiktoken.core.Encoding:
     """
     # Create structured markets to convert input text to tokens
     special_tokens = [
-    "<|begin_of_text|>",  # Marks the beginning of a text sequence.
-    "<|end_of_text|>",  # Marks the end of a text sequence.
-    "<|reserved_special_token_0|>",  # Reserved for future use.
-    "<|reserved_special_token_1|>",  # Reserved for future use.
-    "<|reserved_special_token_2|>",  # Reserved for future use.
-    "<|reserved_special_token_3|>",  # Reserved for future use.
-    "<|start_header_id|>",  # Indicates the start of a header ID.
-    "<|end_header_id|>",  # Indicates the end of a header ID.
-    "<|reserved_special_token_4|>",  # Reserved for future use.
-    "<|eot_id|>",  # Marks the end of a turn (in a conversational context).
+    "<|begin_of_text|>",  
+    "<|end_of_text|>",
+    "<|reserved_special_token_0|>",  
+    "<|reserved_special_token_1|>",  
+    "<|reserved_special_token_2|>",  
+    "<|reserved_special_token_3|>",
+    "<|start_header_id|>",
+    "<|end_header_id|>",
+    "<|reserved_special_token_4|>",
+    "<|eot_id|>",
     "[MASK]",
-    ] + [f"<|reserved_special_token_{i}|>" for i in range(5, 256 - 5)]  # A large set of tokens reserved for future use.
+    ] + [f"<|reserved_special_token_{i}|>" for i in range(5, 256 - 5)]
     
     # Define the atterns based on which text will be break into tokens
     tokenize_breaker = r"(?i:'s|'t|'re|'ve|'m|'ll|'d)|[^\r\n\p{L}\p{N}]?\p{L}+|\p{N}{1,3}| ?[^\s\p{L}\p{N}]+[\r\n]*|\s*[\r\n]+|\s+(?!\S)|\s+"
