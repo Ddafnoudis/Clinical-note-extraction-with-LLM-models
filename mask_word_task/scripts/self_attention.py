@@ -1,4 +1,5 @@
 """
+Apply self attention 
 """
 import torch
 from typing import Dict
@@ -46,6 +47,7 @@ def self_attention_qkv(model: Dict, token_embeddings: torch.Tensor,
     qmk_attention = torch.matmul(qk_per_token_after_masking_after_softmax, v_per_token)
 
     return v_layer_0
+
 
 if __name__=="__main__":
     self_attention_qkv()
