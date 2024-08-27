@@ -1,4 +1,5 @@
 """
+Apply SwiGLU activation funtion to the embedding after normalization
 """
 import torch
 from typing import Dict
@@ -7,6 +8,7 @@ from typing import Dict
 def swiglu_activation_function(embedding_after_edit_normalized: torch.Tensor,
                                model: Dict):
     """
+    Define the Feedforward weights
     """
     # Retrieve weights for feedforward layer
     w1 = model["layers.0.feed_forward.w1.weight"]
