@@ -39,7 +39,7 @@ def llm_pipeline(df_dk_path: Path, tokenizer_model: Path,
     tokenizer = preprocess_tokenizer(tokenizer_model=tokenizer_model)
     # Preprocess the clinical text data
     train_text, test_text, clinical_notes_list= preprocessing_text(df_danish_path=df_dk_path)
-    
+    # Mask the words from the train, test clinical notes
     masked_clinical_notes, train_masked_notes, test_masked_notes = mask_words(clinical_notes_list=clinical_notes_list, 
                                        train_text=train_text,
                                        test_text=test_text,
@@ -47,18 +47,15 @@ def llm_pipeline(df_dk_path: Path, tokenizer_model: Path,
                                        mask_prob=mask_prob)
     
     # print(masked_clinical_notes)
+    # Find the indices of the masked tokens
     test_mask_indices = find_mask_indices(test_masked_notes=test_masked_notes)
-    print(f"Type of Mask indices: {type(test_mask_indices)}")
-    print(test_masked_notes[:5])
     # Tokenize words
     tokens = tokenize_input(tokenizer=tokenizer, train_text=train_masked_notes)
-    print(f"Tokens tensor shape: {tokens.shape}")
     # Define the embedding tokens and normalize them
     token_embeddings, token_embeddings_unnormal = embedding_layer(model=model, vocab_size=vocab_size, dim=dim, tokens=tokens, norm_eps=norm_eps)
-    print(f"\nToken Embeddings Shape: {token_embeddings.shape}\n")
-    print(f"\nToken Embeddings Unnormalized shape: {token_embeddings_unnormal.shape}\n")
+    # Calculate the first layer of the query tensor 
     q_layer_0, q_per_token_rotated, freqs_cis = query_tensor(model=model, n_heads=n_heads, dim=dim, token=tokens, token_embeddings=token_embeddings, rope_theta=rope_theta)
-
+    # Calculate the key tensor of the first layer
     k_layer_0, k_per_token_rotated = key_tensor(freqs_cis=freqs_cis, 
                                                 model=model, 
                                                 n_kv_heads=n_kv_heads, 
