@@ -1,4 +1,5 @@
 """
+Calculate the first layer of the key tensor
 """
 import torch
 from typing import Dict
@@ -10,6 +11,7 @@ def key_tensor(model: Dict,
                token_embeddings: torch.Tensor,
                freqs_cis: torch.Tensor):
     """
+    Calculate the key tensor for the first layer
     """
     # Retrieve the weight of the attentions mechanism's query in the first layer of the model
     k_layer_0 = model["layers.0.attention.wk.weight"]
