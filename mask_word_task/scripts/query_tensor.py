@@ -1,4 +1,5 @@
 """
+Define the query tensor of the first layer of the model
 """
 import torch
 from typing import Dict
@@ -6,8 +7,8 @@ from typing import Dict
 
 def query_tensor(model: Dict, n_heads:int, dim: int, token: torch.Tensor, token_embeddings: torch.Tensor, rope_theta: float):
     """
+    Define the query tensor
     """
-    ####################### QUERY #######################
     # Retrieve the weight of the attentions mechanism's query in the first layer of the model
     q_layer_0 = model["layers.0.attention.wq.weight"]
     # Calculate the dimension per headgit 
@@ -36,13 +37,11 @@ def query_tensor(model: Dict, n_heads:int, dim: int, token: torch.Tensor, token_
     # Calculate complex numbers 
     freqs_cis = torch.polar(torch.ones_like(freqs_for_each_token), freqs_for_each_token)
     q_per_token_as_complex_num_rotated = q_per_token_as_compl_num * freqs_cis
-    
     # Convert rotated complex numbers back to real numbers
     q_per_t_split_into_pairs_rotated = torch.view_as_real(q_per_token_as_complex_num_rotated)
-    # print(q_per_t_split_into_pairs_rotated.shape)
+    # Rotate the query per token
     q_per_token_rotated = q_per_t_split_into_pairs_rotated.view(q_per_token.shape)
-    # print(q_per_token_rotated.shape)
-
+    
     return q_layer_0, q_per_token_rotated, freqs_cis
 
 
