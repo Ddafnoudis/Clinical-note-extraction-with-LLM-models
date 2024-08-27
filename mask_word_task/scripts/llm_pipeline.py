@@ -50,7 +50,7 @@ def llm_pipeline(df_dk_path: Path, tokenizer_model: Path,
     print(f"\nToken Embeddings Shape: {token_embeddings.shape}\n")
     print(f"\nToken Embeddings Unnormalized shape: {token_embeddings_unnormal.shape}\n")
     q_layer_0, q_per_token_rotated, freqs_cis = query_tensor(model=model, n_heads=n_heads, dim=dim, token=tokens, token_embeddings=token_embeddings, rope_theta=rope_theta)
-<<<<<<< HEAD
+
     k_layer_0, k_per_token_rotated = key_tensor(freqs_cis=freqs_cis, 
                                                 model=model, 
                                                 n_kv_heads=n_kv_heads, 
@@ -78,50 +78,6 @@ def llm_pipeline(df_dk_path: Path, tokenizer_model: Path,
                                               dim=dim, n_kv_heads=n_kv_heads, norm_eps=norm_eps,
                                               freqs_cis=freqs_cis)
     
-=======
-    
-    model = LLama3_1(model=model, n_layers=n_layers, n_heads=n_heads,
-                     dim=dim, n_kv_heads=n_kv_heads, norm_eps=norm_eps,
-                     freqs_cis=freqs_cis)
-    # Check the number of trainable parameters
-    print(f"Number of trainable parameters: {sum(p.numel() for p in model.parameters() if p.requires_grad)}")
-    
-
-    num_epochs=10 
-    learning_rate=1e-4
-    # Define loss function and optimizer
-    criterion = nn.CrossEntropyLoss()
-    optimizer = optim.Adam(model.parameters(), lr=learning_rate)    # Training loop
-    model.train()
-    for epoch in range(num_epochs):
-        total_loss = 0
-        for i, masked_note in enumerate(train_masked_notes):
-            optimizer.zero_grad()
-
-            # Tokenize the masked note
-            tokens = tokenize_input(tokenizer=tokenizer, masked_clinical_notes=[masked_note])
-            token_embeddings, _ = embedding_layer(model=model, vocab_size=vocab_size, dim=dim, tokens=tokens, norm_eps=norm_eps)
-
-            # Forward pass
-            outputs = model(token_embeddings)
-
-            # Compute loss
-            loss = criterion(outputs.view(-1, vocab_size), tokens.view(-1))
-            total_loss += loss.item()
-
-            # Backward pass and optimization
-            loss.backward()
-            optimizer.step()
-
-        avg_loss = total_loss / len(train_masked_notes)
-        print(f"Epoch [{epoch+1}/{num_epochs}], Loss: {avg_loss:.4f}")
-
-    print("Training complete.")
-
-    # predictions = predict_masked_tokens(mask_indices=mask_indices, 
-    #                                     model=model, tokenizer=tokenizer, 
-    #                                     masked_clinical_notes=masked_clinical_notes)
->>>>>>> f6dca2dacb12fcf97916bbe3507da3170b672f4e
 
 if __name__ =="__main__":
     llm_pipeline()
