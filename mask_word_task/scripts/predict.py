@@ -1,4 +1,5 @@
 """
+This script is not yet finished with the prediction of words
 """
 import torch
 from typing import List, Dict
