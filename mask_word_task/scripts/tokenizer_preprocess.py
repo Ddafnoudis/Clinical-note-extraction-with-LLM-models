@@ -38,8 +38,6 @@ def preprocess_tokenizer(tokenizer_model: Dict)-> tiktoken.core.Encoding:
         special_tokens={token: len(tokenizer_model) + i for i, token in enumerate(special_tokens)},
     )
 
-    # print(type(tokenizer))
-
     return tokenizer
 
 
