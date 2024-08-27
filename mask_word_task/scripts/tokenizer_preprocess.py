@@ -26,7 +26,7 @@ def preprocess_tokenizer(tokenizer_model: Dict)-> tiktoken.core.Encoding:
     "[MASK]",
     ] + [f"<|reserved_special_token_{i}|>" for i in range(5, 256 - 5)]
     
-    # Define the atterns based on which text will be break into tokens
+    # Define the patterns based on which text will be break into tokens
     tokenize_breaker = r"(?i:'s|'t|'re|'ve|'m|'ll|'d)|[^\r\n\p{L}\p{N}]?\p{L}+|\p{N}{1,3}| ?[^\s\p{L}\p{N}]+[\r\n]*|\s*[\r\n]+|\s+(?!\S)|\s+"
    
    # Initialize tokenizer  with specified parameters
