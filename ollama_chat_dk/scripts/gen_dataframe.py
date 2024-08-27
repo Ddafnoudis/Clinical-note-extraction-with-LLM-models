@@ -2,6 +2,7 @@
 Generate an English and a Danish DataFrames that contain patient id, codes 
 and clinical notes.
 """
+import os
 import pandas as pd
 
 def gen_dataframe():
@@ -67,6 +68,8 @@ def gen_dataframe():
     }
     # Convert into a DataFrame
     df = pd.DataFrame(data)
+    if not os.path.exists("dataset_notes"):
+        os.mkdir("dataset_notes")
     # Save the English DataFrame
     df.to_csv("dataset_notes/clin_note_df.tsv", sep="\t", index=False)
 
