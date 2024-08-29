@@ -2,12 +2,12 @@
 Interact with the architecture of the Llama-3.1 model for masking words prediction tasks.
 Load the model, tokenizer and the parameters. The clinical text is in Danish. 
 """
+import torch
 from pathlib import Path
 from scripts.key_tensor import key_tensor
 from scripts.query_tensor import query_tensor
 from scripts.define_model import model_config
 from scripts.final import final_all_layers_merged
-from scripts.predict import predict_masked_tokens
 from scripts.tokenize_input import tokenize_input
 from scripts.embendding_layer import embedding_layer
 from scripts.param_config import param_configuration
@@ -40,17 +40,18 @@ def llm_pipeline(df_dk_path: Path, tokenizer_model: Path,
     # Preprocess the clinical text data
     train_text, test_text, clinical_notes_list= preprocessing_text(df_danish_path=df_dk_path)
     # Mask the words from the train, test clinical notes
-    masked_clinical_notes, train_masked_notes, test_masked_notes = mask_words(clinical_notes_list=clinical_notes_list, 
+    masked_clinical_notes = mask_words(clinical_notes_list=clinical_notes_list, 
                                        train_text=train_text,
                                        test_text=test_text,
                                        mask_token=mask_token, 
                                        mask_prob=mask_prob)
     
-    # print(masked_clinical_notes)
+    masked_clinical_notes = masked_clinical_notes[1]
+    # print(masked_clinical_notes);exit()
     # Find the indices of the masked tokens
-    test_mask_indices = find_mask_indices(test_masked_notes=test_masked_notes)
+    test_mask_indices = find_mask_indices(test_masked_notes=masked_clinical_notes)
     # Tokenize words
-    tokens = tokenize_input(tokenizer=tokenizer, train_text=train_masked_notes)
+    tokens = tokenize_input(tokenizer=tokenizer, masked_clinical_notes=masked_clinical_notes)
     # Define the embedding tokens and normalize them
     token_embeddings, token_embeddings_unnormal = embedding_layer(model=model, vocab_size=vocab_size, dim=dim, tokens=tokens, norm_eps=norm_eps)
     # Calculate the first layer of the query tensor 
@@ -82,7 +83,26 @@ def llm_pipeline(df_dk_path: Path, tokenizer_model: Path,
                                               model=model, n_layers=n_layers, n_heads=n_heads,
                                               dim=dim, n_kv_heads=n_kv_heads, norm_eps=norm_eps,
                                               freqs_cis=freqs_cis)
+    # Create a loop to iterate over the mask tokens and replace them with the predicted next token
+    # Find the positions of [MASK] tokens
+    mask_positions = [i for i, token in enumerate(tokens) if token == '[MASK]']
+    	
+    for mask_pos in mask_positions:
+        # Calculate logits for the current [MASK] position
+        logits = torch.matmul(final_embedding[mask_pos], model["output.weight"].T)
+
+        # Find the index of the maximum value to determine the next token
+        next_token = torch.argmax(logits, dim=-1)
+
+        # You can now use next_token to replace the [MASK] at this position
+        # For example, you could update the tokens list:
+        tokens[mask_pos] = next_token.item()
+
+    print(f"Replaced [MASK] at position {mask_pos} with token {next_token.item()}")
+
+    # After the loop, you can convert tokens back to text if needed
     
+
 
 if __name__ =="__main__":
     llm_pipeline()
