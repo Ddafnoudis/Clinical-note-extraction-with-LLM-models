@@ -127,7 +127,7 @@ def final_all_layers_merged(token_embeddings_unnormal: torch.Tensor,
 
     # Print the shape of the resulting normalized final embedding
     print(f"Shape of the final embedding: {final_embedding.shape}")
-
+    
     return final_embedding
 
 
